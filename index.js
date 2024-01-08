@@ -11,13 +11,14 @@ const { TOKEN, PORT } = process.env;
 
 // Initialize the MySQL connection
 async function initializeDatabase() {
-	try {
-		console.log('MySQL database connection established');
-		return connection;
-	} catch (error) {
-		console.error(`Error initializing database: ${error}`);
-		throw error;
-	}
+  try {
+    const connection = await connectToDatabase();
+    console.log('MySQL database connection established');
+    return connection;
+  } catch (error) {
+    console.error(`Error initializing database: ${error}`);
+    throw error;
+  }
 }
 
 // Create an Express app

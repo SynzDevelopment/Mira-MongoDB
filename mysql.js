@@ -2,6 +2,8 @@
 
 require('dotenv').config();
 const mysql = require('mysql2/promise');
+const { guildSettingsSchema } = require('./Schemas/guildSchemas'); // Import the guild schema
+const { userSchema } = require('./Schemas/userSchemas'); // Import the user schema
 
 // Define the JDBC connection string
 const jdbcConnectionString = process.env.JDBC_CONNECTION_STRING;
@@ -20,6 +22,9 @@ async function connectToDatabase() {
 
     // Execute the guildSettingsSchema when connecting to the database
     await connection.query(guildSettingsSchema);
+
+    // Execute the userSchema when connecting to the database
+    await connection.query(userSchema);
 
     console.log('Connected to MySQL database');
     return connection;

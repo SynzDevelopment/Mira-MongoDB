@@ -1,8 +1,8 @@
 require('dotenv').config();
-const fs = require('fs');
 const path = require('path');
 const { Events } = require('discord.js');
 const { GUILD_ID, UNVERIFIED_ROLE_ID, VERIFY_CHANNEL_ID } = process.env;
+const { executeQuery } = require('../mysql'); // Adjust the path based on your project structure
 
 // Function to generate a random 6-character code
 function generateVerificationCode() {
@@ -26,33 +26,7 @@ module.exports = {
     // Generate a verification code
     const verificationCode = generateVerificationCode();
 
-    // Path to verify.json
-    const verifyFilePath = path.join(__dirname, '..', 'verify.json');
-
     try {
-      let verifyData = [];
-
-      // Check if verify.json exists
-      if (fs.existsSync(verifyFilePath)) {
-        // Read existing data
-        const existingData = fs.readFileSync(verifyFilePath, 'utf-8');
-        verifyData = JSON.parse(existingData);
-
-        // Check if user ID already exists
-        const existingUserIndex = verifyData.findIndex((data) => data.userId === member.user.id);
-
-        if (existingUserIndex !== -1) {
-          // If user exists, update the code
-          verifyData[existingUserIndex].code = verificationCode;
-        } else {
-          // If user doesn't exist, add a new entry
-          verifyData.push({ userId: member.user.id, code: verificationCode });
-        }
-      } else {
-        // If verify.json doesn't exist, create a new entry
-        verifyData.push({ userId: member.user.id, code: verificationCode });
-      }
-
       // Assign UNVERIFIED_ROLE_ID to the new member
       const unverifiedRole = member.guild.roles.cache.get(UNVERIFIED_ROLE_ID);
       if (unverifiedRole) {
@@ -62,8 +36,15 @@ module.exports = {
         console.error(`UNVERIFIED_ROLE_ID (${UNVERIFIED_ROLE_ID}) not found.`);
       }
 
-      // Write the updated array back to verify.json
-      fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
+      // Execute SQL query to insert user data into the user schema
+      const query = 'INSERT INTO users_schema.user_data (user_id, verification_code) VALUES (?, ?)';
+      const values = [member.user.id, verificationCode];
+      const [rows, error] = await executeQuery(query, values);
+
+      if (error) {
+        console.error(`Error inserting user data into MySQL: ${error}`);
+        return;
+      }
 
       console.log(`Generated and saved verification code for ${member.user.tag}: ${verificationCode}`);
 
@@ -84,7 +65,7 @@ module.exports = {
         console.error(`VERIFY_CHANNEL_ID (${VERIFY_CHANNEL_ID}) not found.`);
       }
     } catch (error) {
-      console.error(`Error updating verify.json: ${error}`);
+      console.error(`Error handling guild member add event: ${error}`);
     }
 
     // Your additional code to handle the guild member add event goes here

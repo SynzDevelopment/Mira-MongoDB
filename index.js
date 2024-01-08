@@ -12,7 +12,6 @@ const { TOKEN, PORT } = process.env;
 // Initialize the MySQL connection
 async function initializeDatabase() {
 	try {
-		const connection = await executeQuery('SELECT 1'); // A simple query to check the connection
 		console.log('MySQL database connection established');
 		return connection;
 	} catch (error) {

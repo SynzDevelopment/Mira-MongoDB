@@ -1,9 +1,5 @@
-// mysql.js
-
 require('dotenv').config();
 const mysql = require('mysql2/promise');
-const { guildSettingsSchema } = require('./Schemas/guildSchemas'); // Import the guild schema
-const { userSchema } = require('./Schemas/userSchemas'); // Import the user schema
 
 // Define the JDBC connection string
 const jdbcConnectionString = process.env.JDBC_CONNECTION_STRING;
@@ -16,15 +12,14 @@ const connectionConfig = {
   // Add other connection options as needed
 };
 
+let connection; // Declare the connection variable
+
 async function connectToDatabase() {
   try {
-    const connection = await mysql.createConnection(connectionConfig);
+    connection = await mysql.createConnection(connectionConfig);
 
     // Execute the guildSettingsSchema when connecting to the database
     await connection.query(guildSettingsSchema);
-
-    // Execute the userSchema when connecting to the database
-    await connection.query(userSchema);
 
     console.log('Connected to MySQL database');
     return connection;
@@ -36,9 +31,11 @@ async function connectToDatabase() {
 
 async function executeQuery(query, values) {
   try {
-    const connection = await connectToDatabase();
+    if (!connection || connection.state === 'disconnected') {
+      await connectToDatabase();
+    }
+
     const [rows] = await connection.execute(query, values);
-    connection.end();
     return [rows, null];
   } catch (error) {
     console.error(`Error executing query: ${error}`);

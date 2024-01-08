@@ -14,7 +14,7 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply();
 
-    const user = interaction.user;
+    const user = await guild.members.fetch(interaction.user.id);
     const guild = interaction.guild;
     const providedCode = interaction.options.getString('code');
     const verifyFilePath = path.join(__dirname, '..', '../verify.json');

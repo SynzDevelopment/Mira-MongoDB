@@ -38,8 +38,16 @@ module.exports = {
           const verifiedRole = guild.roles.cache.get(process.env.VERIFIED_ROLE_ID);
 
           if (unverifiedRole && verifiedRole) {
-            await user.roles.remove(unverifiedRole);
-            await user.roles.add(verifiedRole);
+            if (user.roles) {
+  await user.roles.remove(unverifiedRole);
+  await user.roles.add(verifiedRole);
+} else {
+  console.error('User roles not available.');
+  await interaction.editReply({
+    content: 'Verification failed due to user roles issue.',
+    ephemeral: true,
+  });
+            }
 
             verifyData.splice(verifyData.indexOf(userData), 1);
             fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));

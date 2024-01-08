@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = {
-  data: new SlashBuilder()
+  data: new SlashCommandBuilder()
     .setName('verify')
     .setDescription('Verify your account using the code.')
     .addStringOption(option =>

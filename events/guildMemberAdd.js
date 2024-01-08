@@ -2,7 +2,7 @@ require('dotenv').config();
 const path = require('path');
 const { Events } = require('discord.js');
 const { GUILD_ID, UNVERIFIED_ROLE_ID, VERIFY_CHANNEL_ID } = process.env;
-const { executeQuery } = require('../mysql'); // Adjust the path based on your project structure
+const { executeQuery } = require('../mysql.js'); // Adjust the path based on your project structure
 
 // Function to generate a random 6-character code
 function generateVerificationCode() {

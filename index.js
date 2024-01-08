@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const express = require('express');
-const { executeQuery } = require('./path/to/mysql'); // Adjust the path accordingly
+const { executeQuery } = require('./mysql.js'); // Adjust the path accordingly
 
 const { TOKEN, PORT } = process.env;
 

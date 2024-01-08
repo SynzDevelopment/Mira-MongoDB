@@ -3,16 +3,16 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = {
-  data: new SlashCommandBuilder()
+  data: new SlashBuilder()
     .setName('verify')
-    .setDescription('Verify your account using the provided code.')
+    .setDescription('Verify your account using the code.')
     .addStringOption(option =>
       option.setName('code')
         .setDescription('The verification code received in your DM.')
         .setRequired(true)
     ),
   async execute(interaction) {
-    await interaction.deferReply();
+    await interaction.deferReply({ ephemeral: true });
 
     const guild = interaction.guild;
     const providedCode = interaction.options.getString('code');
@@ -31,6 +31,20 @@ module.exports = {
       const userData = verifyData.find(data => data.userId === user.id);
 
       if (userData) {
+        if (userData.attempts >= 3) {
+          await guild.members.kick(user.id, 'Failed verification attempts.');
+          await user.send('You have exceeded the maximum number of verification attempts and have been kicked from the server.');
+
+          verifyData.splice(verifyData.indexOf(userData), 1);
+          fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
+
+          await interaction.editReply({
+            content: 'Verification failed. You have been kicked from the server.',
+            ephemeral: true,
+          });
+          return;
+        }
+
         const storedCode = userData.code;
 
         if (providedCode === storedCode) {
@@ -39,14 +53,15 @@ module.exports = {
 
           if (unverifiedRole && verifiedRole) {
             if (user.roles) {
-  await user.roles.remove(unverifiedRole);
-  await user.roles.add(verifiedRole);
-} else {
-  console.error('User roles not available.');
-  await interaction.editReply({
-    content: 'Verification failed due to user roles issue.',
-    ephemeral: true,
-  });
+              await user.roles.remove(unverifiedRole);
+              await user.roles.add(verifiedRole);
+            } else {
+              console.error('User roles not available.');
+              await interaction.editReply({
+                content: 'Verification failed due to user roles issue.',
+                ephemeral: true,
+              });
+              return;
             }
 
             verifyData.splice(verifyData.indexOf(userData), 1);
@@ -64,25 +79,13 @@ module.exports = {
             });
           }
         } else {
-          userData.attempts = (userData.attempts || 0) + 1;
+          userData.attempts++;
+          fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
 
-          if (userData.attempts >= 3) {
-            await guild.members.kick(user.id, 'Failed verification attempts.');
-            await user.send('You have exceeded the maximum number of verification attempts and have been kicked from the server.');
-
-            verifyData.splice(verifyData.indexOf(userData), 1);
-            fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
-
-            await interaction.editReply({
-              content: 'Verification failed. You have been kicked from the server.',
-              ephemeral: true,
-            });
-          } else {
-            await interaction.editReply({
-              content: `Verification failed. Please double-check the code. Attempt ${userData.attempts}/3.`,
-              ephemeral: true,
-            });
-          }
+          await interaction.editReply({
+            content: `Verification failed. Please double-check the code. Attempt ${userData.attempts}/3.`,
+            ephemeral: true,
+          });
         }
       } else {
         console.warn('User not found in verification data.');

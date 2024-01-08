@@ -28,80 +28,85 @@ module.exports = {
       const existingData = fs.readFileSync(verifyFilePath, 'utf-8');
       const verifyData = JSON.parse(existingData);
 
-      const userData = verifyData.find(data => data.userId === user.id);
+      let userData = verifyData.find(data => data.userId === user.id);
 
-      if (userData) {
-        if (userData.attempts >= 3) {
-          await guild.members.kick(user.id, 'Failed verification attempts.');
-          await user.send('You have exceeded the maximum number of verification attempts and have been kicked from the server.');
+      if (!userData) {
+        // If user data does not exist, create a new entry with attempts starting at 1
+        userData = {
+          userId: user.id,
+          code: 'your_initial_verification_code', // Set this to the actual initial verification code
+          attempts: 1,
+        };
 
-          verifyData.splice(verifyData.indexOf(userData), 1);
-          fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
+        verifyData.push(userData);
+        fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
+      }
 
-          await interaction.editReply({
-            content: 'Verification failed. You have been kicked from the server.',
-            ephemeral: true,
-          });
-          return;
-        }
+      if (userData.attempts >= 3) {
+        // Send DM before kicking the user
+        await user.send('You have exceeded the maximum number of verification attempts and will be kicked from the server.');
+        await guild.members.kick(user.id, 'Failed verification attempts.');
 
-        const storedCode = userData.code;
+        verifyData.splice(verifyData.indexOf(userData), 1);
+        fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
 
-        if (providedCode === storedCode) {
-          const unverifiedRole = guild.roles.cache.get(process.env.UNVERIFIED_ROLE_ID);
-          const verifiedRole = guild.roles.cache.get(process.env.VERIFIED_ROLE_ID);
+        await interaction.editReply({
+          content: 'Verification failed. You have been kicked from the server.',
+          ephemeral: true,
+        });
+        return;
+      }
 
-          if (unverifiedRole && verifiedRole) {
-            if (user.roles) {
-              await user.roles.remove(unverifiedRole);
-              await user.roles.add(verifiedRole);
+      const storedCode = userData.code;
 
-              // Redirect to a different channel
-              const verifiedChannel = guild.channels.cache.get(process.env.VERIFIED_CHANNEL_ID);
-              if (verifiedChannel) {
-                await user.edit({
-                  channel: verifiedChannel,
-                });
-              } else {
-                console.error('Verified channel not found.');
-              }
+      if (providedCode === storedCode) {
+        const unverifiedRole = guild.roles.cache.get(process.env.UNVERIFIED_ROLE_ID);
+        const verifiedRole = guild.roles.cache.get(process.env.VERIFIED_ROLE_ID);
 
-              // Delete user data from verify.json
-              verifyData.splice(verifyData.indexOf(userData), 1);
-              fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
-            } else {
-              console.error('User roles not available.');
-              await interaction.editReply({
-                content: 'Verification failed due to user roles issue.',
-                ephemeral: true,
+        if (unverifiedRole && verifiedRole) {
+          if (user.roles) {
+            await user.roles.remove(unverifiedRole);
+            await user.roles.add(verifiedRole);
+
+            // Redirect to a different channel
+            const verifiedChannel = guild.channels.cache.get(process.env.VERIFIED_CHANNEL_ID);
+            if (verifiedChannel) {
+              await user.edit({
+                channel: verifiedChannel,
               });
-              return;
+            } else {
+              console.error('Verified channel not found.');
             }
 
-            await interaction.editReply({
-              content: 'Verification successful! You now have the verified role and have been redirected.',
-              ephemeral: true,
-            });
+            // Delete user data from verify.json
+            verifyData.splice(verifyData.indexOf(userData), 1);
+            fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
           } else {
-            console.error('UNVERIFIED_ROLE_ID or VERIFIED_ROLE_ID not found.');
+            console.error('User roles not available.');
             await interaction.editReply({
-              content: 'Verification failed due to role configuration issue.',
+              content: 'Verification failed due to user roles issue.',
               ephemeral: true,
             });
+            return;
           }
-        } else {
-          userData.attempts++;
-          fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
 
           await interaction.editReply({
-            content: `Verification failed. Please double-check the code. Attempt ${userData.attempts}/3.`,
+            content: 'Verification successful! You now have the verified role and have been redirected.',
+            ephemeral: true,
+          });
+        } else {
+          console.error('UNVERIFIED_ROLE_ID or VERIFIED_ROLE_ID not found.');
+          await interaction.editReply({
+            content: 'Verification failed due to role configuration issue.',
             ephemeral: true,
           });
         }
       } else {
-        console.warn('User not found in verification data.');
+        userData.attempts++;
+        fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
+
         await interaction.editReply({
-          content: 'Verification failed. User not found.',
+          content: `Verification failed. Please double-check the code. Attempt ${userData.attempts}/3.`,
           ephemeral: true,
         });
       }

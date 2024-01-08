@@ -21,7 +21,7 @@ module.exports = {
 
     try {
       if (!fs.existsSync(verifyFilePath)) {
-        console.warn('Verification file not found, creating new one.');
+        console.warn('Verification file not found, creating a new one.');
         fs.writeFileSync(verifyFilePath, JSON.stringify([], null, 2));
       }
 
@@ -55,6 +55,20 @@ module.exports = {
             if (user.roles) {
               await user.roles.remove(unverifiedRole);
               await user.roles.add(verifiedRole);
+
+              // Redirect to a different channel
+              const verifiedChannel = guild.channels.cache.get(process.env.VERIFIED_CHANNEL_ID);
+              if (verifiedChannel) {
+                await user.edit({
+                  channel: verifiedChannel,
+                });
+              } else {
+                console.error('Verified channel not found.');
+              }
+
+              // Delete user data from verify.json
+              verifyData.splice(verifyData.indexOf(userData), 1);
+              fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
             } else {
               console.error('User roles not available.');
               await interaction.editReply({
@@ -64,11 +78,8 @@ module.exports = {
               return;
             }
 
-            verifyData.splice(verifyData.indexOf(userData), 1);
-            fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
-
             await interaction.editReply({
-              content: 'Verification successful! You now have the verified role.',
+              content: 'Verification successful! You now have the verified role and have been redirected.',
               ephemeral: true,
             });
           } else {

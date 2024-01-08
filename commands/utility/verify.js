@@ -68,16 +68,7 @@ module.exports = {
             await user.roles.remove(unverifiedRole);
             await user.roles.add(verifiedRole);
 
-            // Redirect to a different text channel
-            const verifiedChannel = guild.channels.cache.get(process.env.VERIFIED_CHANNEL_ID);
-            if (verifiedChannel) {
-              await user.send('Verification successful! You now have the verified role.');
-              await user.edit({
-                channel: verifiedChannel,
-              });
-            } else {
-              console.error('Verified text channel not found.');
-            }
+
 
             // Delete user data from verify.json
             verifyData.splice(verifyData.indexOf(userData), 1);
@@ -92,7 +83,7 @@ module.exports = {
           }
 
           await interaction.editReply({
-            content: 'Verification successful! You now have the verified role and have been redirected.',
+            content: 'Verification successful! https://discord.com/channels/1193401538052358214/1193401538522140787',
             ephemeral: true,
           });
         } else {
@@ -107,7 +98,7 @@ module.exports = {
         fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
 
         await interaction.editReply({
-          content: `Verification failed. Please double-check the code. Attempt ${userData.attempts}/3.`,
+          content: `Verification failed. Please double-check the code. Attempt ${userData.attempts + 1}/3.`,
           ephemeral: true,
         });
       }

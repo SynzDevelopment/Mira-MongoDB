@@ -68,14 +68,15 @@ module.exports = {
             await user.roles.remove(unverifiedRole);
             await user.roles.add(verifiedRole);
 
-            // Redirect to a different channel
-            const verifiedChannel = guild.channels.cache.get(process.env.VERIFIED_CHANNEL_ID);
+            // Redirect to a different text channel
+            const verifiedChannel = guild.channels.cache.get(process.env.VERIFIED_TEXT_CHANNEL_ID);
             if (verifiedChannel) {
+              await user.send('Verification successful! You now have the verified role.');
               await user.edit({
                 channel: verifiedChannel,
               });
             } else {
-              console.error('Verified channel not found.');
+              console.error('Verified text channel not found.');
             }
 
             // Delete user data from verify.json

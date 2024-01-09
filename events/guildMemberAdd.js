@@ -1,8 +1,7 @@
 require('dotenv').config();
-const path = require('path');
 const { Events } = require('discord.js');
 const { GUILD_ID, UNVERIFIED_ROLE_ID, VERIFY_CHANNEL_ID } = process.env;
-const { executeQuery } = require('../mysql.js'); // Adjust the path based on your project structure
+const { executeQuery } = require('../database.js'); // Adjust the path based on your project structure
 
 // Function to generate a random 6-character code
 function generateVerificationCode() {
@@ -36,13 +35,13 @@ module.exports = {
         console.error(`UNVERIFIED_ROLE_ID (${UNVERIFIED_ROLE_ID}) not found.`);
       }
 
-      // Execute SQL query to insert user data into the user schema
-      const query = 'INSERT INTO users_schema.user_data (user_id, verification_code) VALUES (?, ?)';
+      // Execute SQL query to insert user data
+      const query = 'INSERT INTO user_data (user_id, verification_code) VALUES (?, ?)';
       const values = [member.user.id, verificationCode];
       const [rows, error] = await executeQuery(query, values);
 
       if (error) {
-        console.error(`Error inserting user data into MySQL: ${error}`);
+        console.error(`Error inserting user data into MariaDB: ${error}`);
         return;
       }
 

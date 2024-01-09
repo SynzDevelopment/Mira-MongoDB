@@ -1,27 +1,11 @@
-// index.js
-
 require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const express = require('express');
-const { connectToDatabase } = require('./mysql.js'); // Adjust the path accordingly
+const { executeQuery } = require('./database.js'); // Adjust the path accordingly
 
 const { TOKEN, PORT } = process.env;
-
-// Create an Express app
-const app = express();
-
-// New endpoint for uptime monitoring
-app.get('/keep-alive', (req, res) => {
-  res.status(200).send('I am awake!');
-});
-
-// Start the server
-const port = PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
 
@@ -29,10 +13,10 @@ client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
-// Initialize the database connection before loading commands and events
-connectToDatabase()
-  .then((connection) => {
-    console.log('MySQL database connection established');
+// Initialize the database connection
+executeQuery('SELECT 1') // A simple query to check if the database connection is successful
+  .then(() => {
+    console.log('MariaDB connection established');
 
     // Load commands and events after the database connection is established
     for (const folder of commandFolders) {

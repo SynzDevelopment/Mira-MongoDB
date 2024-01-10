@@ -1,11 +1,11 @@
 // Array of allowed guild IDs
-const allowedGuildIds = ['1157480671929970729', '1193401538052358214'];
+const allowedGuildIds = ['1157480671929970729'];
 
 // Array of allowed channel IDs
-const allowedChannelIds = ['1193405005143744572', '1193464204338929785'];
+const allowedChannelIds = ['1157480672777220156', '1194338619461214359', '1194339468262506576'];
 
 // Array of allowed role IDs
-const allowedRoleIds = ['1193402360286957579', '1193401769682812969'];
+const allowedRoleIds = ['1157481855776460802', '1157480672034836560'];
 
 module.exports = {
   name: 'messageCreate',
@@ -27,7 +27,7 @@ module.exports = {
     }
 
     // Check if the message content does not include "dm" and is not in an allowed channel
-    if (!message.content.toLowerCase().includes('dm') && !allowedChannelIds.includes(message.channel.id)) {
+    if (!message.content.toLowerCase().includes('dm') && allowedChannelIds.includes(message.channel.id)) {
       // If the message does not contain "dm" and is not in an allowed channel, delete the message
       message.delete().catch(error => {
         console.error(`Error deleting message: ${error}`);

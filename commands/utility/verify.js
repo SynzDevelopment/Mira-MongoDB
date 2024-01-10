@@ -36,8 +36,22 @@ module.exports = {
           await user.roles.add(verifiedRole);
 
           // Remove user data using Mongoose method
-          const removeProfile = await verifyData.findOneAndDelete({ id: interaction.user.id });
-          removeProfile();
+          async function removeVerifyProfile(interaction) {
+            try {
+              const removeProfile = await verifyData.findOneAndDelete({ id: interaction.user.id });
+
+              if (removeProfile) {
+                console.log(`Profile removed for user with ID: ${interaction.user.id}`);
+              } else {
+                console.log(`No profile found for user with ID: ${interaction.user.id}`);
+              }
+            } catch (error) {
+              console.error(`Error removing profile: ${error}`);
+            }
+          }
+
+          // Usage
+          await removeVerifyProfile(interaction);
 
           return interaction.editReply({
             content: "Verification successful! [Link](https://discord.com/channels/1193401538052358214/1193401538522140787)",

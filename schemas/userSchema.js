@@ -1,6 +1,11 @@
 // schemas/userSchema.js
 const mongoose = require('mongoose');
 
+const connectDB = require('../db.js');
+
+// Call connectDB before using the model
+connectDB();
+
 const userSchema = new mongoose.Schema({
   user_id: String,
   verification_code: String,

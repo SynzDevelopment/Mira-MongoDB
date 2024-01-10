@@ -32,6 +32,11 @@ module.exports = {
       return;
     }
 
+    // Check if the message content includes "dm"
+    if (message.content.toLowerCase().includes('dm')) {
+      return;
+    }
+
     // Check if the message is from an allowed channel
     if (!allowedChannelIds.includes(message.channel.id)) {
       // If not from an allowed channel and without an allowed role, delete the message

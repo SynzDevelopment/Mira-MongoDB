@@ -7,7 +7,7 @@ module.exports = {
     console.log(`Ready! Logged in as ${client.user.tag}`);
 
     client.user.setPresence({
-      activities: [{ name: `Over ${client.guilds.cache.size} Guilds And ${client.users.cache.size} Users!`, type: 'WATCHING' }]
+      activities: [{ name: `With ${client.guilds.cache.size} Guilds And ${client.users.cache.size} Users!`, type: 'PLAYING'}]
     });
   },
 };

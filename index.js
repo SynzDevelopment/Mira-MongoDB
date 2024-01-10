@@ -3,9 +3,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const express = require('express');
-const { executeQuery } = require('./database.js'); // Adjust the path accordingly
+const { MongoClient } = require('mongodb');
 
-const { TOKEN, PORT } = process.env;
+const { TOKEN, PORT, MONGODB_URI } = process.env;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
@@ -13,10 +13,12 @@ client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
-// Initialize the database connection
-executeQuery('SELECT 1') // A simple query to check if the database connection is successful
+// Initialize the MongoDB connection
+const clientMongo = new MongoClient(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+clientMongo.connect()
   .then(() => {
-    console.log('MariaDB connection established');
+    console.log('MongoDB connection established');
 
     // Load commands and events after the database connection is established
     for (const folder of commandFolders) {
@@ -50,6 +52,6 @@ executeQuery('SELECT 1') // A simple query to check if the database connection i
     client.login(TOKEN);
   })
   .catch((error) => {
-    console.error('Exiting due to database connection error:', error);
+    console.error('Exiting due to MongoDB connection error:', error);
     process.exit(1); // Exit the process with an error code
   });

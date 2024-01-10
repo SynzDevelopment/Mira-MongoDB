@@ -1,7 +1,10 @@
 require('dotenv').config();
 const { Events } = require('discord.js');
 const { GUILD_ID, UNVERIFIED_ROLE_ID, VERIFY_CHANNEL_ID } = process.env;
-const { executeQuery } = require('../database.js');
+const { MongoClient } = require('mongodb');
+
+const MONGODB_URI = process.env.MONGODB_URI;
+const clientMongo = new MongoClient(MONGODB_URI, { useUnifiedTopology: true });
 
 // Function to generate a random 6-character code
 function generateVerificationCode() {
@@ -35,13 +38,21 @@ module.exports = {
         console.error(`UNVERIFIED_ROLE_ID (${UNVERIFIED_ROLE_ID}) not found.`);
       }
 
-      // Execute SQL query to insert user data
-      const query = 'INSERT INTO user_data (user_id, verification_code) VALUES (?, ?)';
-      const values = [member.user.id, verificationCode];
-      const [rows, error] = await executeQuery(query, values);
+      // Connect to MongoDB
+      await clientMongo.connect();
+      const database = clientMongo.db();
+      const userCollection = database.collection('user_data');
 
-      if (error) {
-        console.error(`Error inserting user data into MariaDB: ${error}`);
+      // Insert user data into MongoDB
+      const userData = {
+        user_id: member.user.id,
+        verification_code: verificationCode,
+      };
+
+      const insertResult = await userCollection.insertOne(userData);
+
+      if (insertResult.result.ok !== 1) {
+        console.error(`Error inserting user data into MongoDB`);
         return;
       }
 
@@ -65,6 +76,9 @@ module.exports = {
       }
     } catch (error) {
       console.error(`Error handling guild member add event: ${error}`);
+    } finally {
+      // Close the MongoDB connection
+      await clientMongo.close();
     }
 
     console.log(`New member joined ${member.guild.name}: ${member.user.tag}`);

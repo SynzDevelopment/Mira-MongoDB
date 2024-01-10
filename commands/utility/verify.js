@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
+const UserData = require('../schemas/userSchema');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,76 +15,46 @@ module.exports = {
 
     const guild = interaction.guild;
     const providedCode = interaction.options.getString('code');
-    const verifyFilePath = path.join(__dirname, '..', '../verify.json');
     const user = await guild.members.fetch(interaction.user.id);
 
     try {
-      if (!fs.existsSync(verifyFilePath)) {
-        console.warn('Verification file not found, creating a new one.');
-        fs.writeFileSync(verifyFilePath, JSON.stringify([], null, 2));
-      }
-
-      const existingData = fs.readFileSync(verifyFilePath, 'utf-8');
-      const verifyData = JSON.parse(existingData);
-
-      let userData = verifyData.find(data => data.userId === user.id);
+      // Find user data in MongoDB using Mongoose
+      const userData = await UserData.findOne({ user_id: user.id });
 
       if (!userData) {
-        // If user data does not exist, create a new entry with attempts starting at 1
-        userData = {
-          userId: user.id,
-          code: 'your_initial_verification_code', // Set this to the actual initial verification code
-          attempts: 1,
-        };
-
-        verifyData.push(userData);
-        fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
-      }
-
-      if (userData.attempts >= 3) {
-        // Send DM before kicking the user
-        await user.send('You have exceeded the maximum number of verification attempts and will be kicked from the server.');
-        await guild.members.kick(user.id, 'Failed verification attempts.');
-
-        verifyData.splice(verifyData.indexOf(userData), 1);
-        fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
-
+        // User data not found
         await interaction.editReply({
-          content: 'Verification failed. You have been kicked from the server.',
+          content: 'Verification failed. User data not found.',
           ephemeral: true,
         });
         return;
       }
 
-      const storedCode = userData.code;
+      const storedCode = userData.verification_code;
 
       if (providedCode === storedCode) {
         const unverifiedRole = guild.roles.cache.get(process.env.UNVERIFIED_ROLE_ID);
         const verifiedRole = guild.roles.cache.get(process.env.VERIFIED_ROLE_ID);
 
         if (unverifiedRole && verifiedRole) {
-          if (user.roles) {
+          try {
             await user.roles.remove(unverifiedRole);
             await user.roles.add(verifiedRole);
 
+            // Remove user data using Mongoose method
+            await userData.remove();
 
-
-            // Delete user data from verify.json
-            verifyData.splice(verifyData.indexOf(userData), 1);
-            fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
-          } else {
-            console.error('User roles not available.');
             await interaction.editReply({
-              content: 'Verification failed due to user roles issue.',
+              content: 'Verification successful! https://discord.com/channels/1193401538052358214/1193401538522140787',
               ephemeral: true,
             });
-            return;
+          } catch (error) {
+            console.error(`Error updating roles or deleting user data: ${error}`);
+            await interaction.editReply({
+              content: 'Verification failed due to role or data update issue.',
+              ephemeral: true,
+            });
           }
-
-          await interaction.editReply({
-            content: 'Verification successful! https://discord.com/channels/1193401538052358214/1193401538522140787',
-            ephemeral: true,
-          });
         } else {
           console.error('UNVERIFIED_ROLE_ID or VERIFIED_ROLE_ID not found.');
           await interaction.editReply({
@@ -94,11 +63,8 @@ module.exports = {
           });
         }
       } else {
-        userData.attempts++;
-        fs.writeFileSync(verifyFilePath, JSON.stringify(verifyData, null, 2));
-
         await interaction.editReply({
-          content: `Verification failed. Please double-check the code. Attempt ${userData.attempts + 1}/3.`,
+          content: 'Verification failed. Please double-check the code.',
           ephemeral: true,
         });
       }

@@ -1,16 +1,15 @@
-require("dotenv").config();
-const { Events } = require("discord.js");
-const { GUILD_ID, UNVERIFIED_ROLE_ID, VERIFY_CHANNEL_ID } = process.env;
-const { MongoClient } = require("mongodb");
+// events/guildMemberAdd.js
+require('dotenv').config();
+const { Events } = require('discord.js');
+const { GUILD_ID, UNVERIFIED_ROLE_ID, VERIFY_CHANNEL_ID, MONGODB_URI } = process.env;
+const mongoose = require('mongoose');
+const UserData = require('../schemas/userSchema');
 
-const MONGODB_URI = process.env.MONGODB_URI;
-const clientMongo = new MongoClient(MONGODB_URI, { useUnifiedTopology: true });
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Function to generate a random 6-character code
 function generateVerificationCode() {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let code = "";
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let code = '';
   for (let i = 0; i < 6; i++) {
     code += characters.charAt(Math.floor(Math.random() * characters.length));
   }
@@ -21,16 +20,11 @@ module.exports = {
   name: Events.GuildMemberAdd,
   once: false,
   async execute(member) {
-    // Check if the member joined the specified guild
     if (member.guild.id !== GUILD_ID) {
-      return; // Ignore the event if it's not the specified guild
+      return;
     }
 
-    // Generate a verification code
-    const verificationCode = generateVerificationCode();
-
     try {
-      // Assign UNVERIFIED_ROLE_ID to the new member
       const unverifiedRole = member.guild.roles.cache.get(UNVERIFIED_ROLE_ID);
       if (unverifiedRole) {
         await member.roles.add(unverifiedRole);
@@ -39,60 +33,41 @@ module.exports = {
         console.error(`UNVERIFIED_ROLE_ID (${UNVERIFIED_ROLE_ID}) not found.`);
       }
 
-      // Connect to MongoDB
-      await clientMongo.connect();
-      const database = clientMongo.db();
+      // Check if the user ID already exists in the collection
+      const userIdExists = await UserData.userExists(member.user.id);
 
-      // Specify the name of the collection
-      const collectionName = "user_data";
-      const userCollection = database.collection(collectionName);
+      if (userIdExists) {
+        console.log(`User ID ${member.user.id} already exists in the collection.`);
 
-      // Check if the collection exists, and create it if not
-      const collections = await database
-        .listCollections({ name: collectionName })
-        .toArray();
+        // Update the verification code for the existing user
+        const newVerificationCode = generateVerificationCode();
+        await UserData.updateVerificationCode(member.user.id, newVerificationCode);
 
-      if (collections.length === 0) {
-        await database.createCollection(collectionName);
-        console.log(`Collection ${collectionName} created.`);
-      } else {
-        console.log(`Collection ${collectionName} already exists.`);
+        console.log(`Updated verification code for ${member.user.tag}: ${newVerificationCode}`);
+        return;
       }
 
-      // Insert user data into MongoDB
-      const userData = {
+      const verificationCode = generateVerificationCode();
+
+      // Create a new document using the Mongoose model
+      const userData = new UserData({
         user_id: member.user.id,
         verification_code: verificationCode,
-      };
+      });
 
-      const insertResult = await userCollection.insertOne(userData);
+      // Save the document to MongoDB
+      await userData.save();
 
-      // Rest of the code...
+      console.log(`Generated and saved verification code for ${member.user.tag}: ${verificationCode}`);
 
-      console.log(
-        `Generated and saved verification code for ${member.user.tag}: ${verificationCode}`,
-      );
-
-      // Send a message to VERIFY_CHANNEL_ID
       const verifyChannel = member.guild.channels.cache.get(VERIFY_CHANNEL_ID);
       if (verifyChannel) {
-        // Send a message in the channel
-        const verificationMessage = await verifyChannel.send(
-          `Hey ${member.user}! Please verify your account using the code we've sent to your DM's\n Verify using the command: \`/verify <code>\``,
-        );
+        const verificationMessage = await verifyChannel.send(`Hey ${member.user}! Please verify your account using the code we've sent to your DM's\n Verify using the command: \`/verify <code>\``);
 
-        // Send the verification code via direct message
-        await member.send(
-          `Your verification code:\n \`\`\`${verificationCode}\`\`\``,
-        );
+        await member.send(`Your verification code:\n \`\`\`${verificationCode}\`\`\``);
 
-        // Delete the verification message in VERIFY_CHANNEL_ID after 60 seconds
         setTimeout(() => {
-          verificationMessage
-            .delete()
-            .catch((error) =>
-              console.error(`Error deleting verification message: ${error}`),
-            );
+          verificationMessage.delete().catch((error) => console.error(`Error deleting verification message: ${error}`));
         }, 60000); // 60 seconds in milliseconds
       } else {
         console.error(`VERIFY_CHANNEL_ID (${VERIFY_CHANNEL_ID}) not found.`);
@@ -100,8 +75,7 @@ module.exports = {
     } catch (error) {
       console.error(`Error handling guild member add event: ${error}`);
     } finally {
-      // Close the MongoDB connection
-      await clientMongo.close();
+      mongoose.connection.close();
     }
 
     console.log(`New member joined ${member.guild.name}: ${member.user.tag}`);

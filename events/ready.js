@@ -1,16 +1,12 @@
 const { ActivityType } = require('discord.js');
 
-// Function to update presence with member count
+// Function to update presence with guild count
 async function statusChanging(client) {
   try {
     await client.guilds.fetch(); // Fetch the latest guild information
 
-    let membersAmount = client.guilds.cache.reduce((acc, guild) => {
-      const nonBotMembers = guild.members.cache.filter((m) => !m.user.bot).size;
-      return acc + nonBotMembers;
-    }, 0);
-
-    const presenceString = `To ${membersAmount} Users in ${client.guilds.cache.size} Guilds!`;
+    const guildCount = client.guilds.cache.size;
+    const presenceString = `In ${guildCount} Guilds!`;
 
     // Set the new presence
     await client.user.setPresence({
@@ -36,6 +32,6 @@ module.exports = {
     // Set up interval to update every 90 seconds (90 * 1000 milliseconds)
     setInterval(() => {
       statusChanging(client);
-    }, 90 * 1000);
+    }, 1000 * 1000);
   },
 };

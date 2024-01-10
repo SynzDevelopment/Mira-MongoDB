@@ -17,7 +17,7 @@ module.exports = {
       });
 
       await userProfile.save();
-			interaction.reply(`User: ${userProfile.name}\nID: ${userProfile.id}`);
+      interaction.reply(`User: ${userProfile.name}\nID: ${userProfile.id}`);
     }
   },
 };

@@ -18,11 +18,13 @@ module.exports = {
         await guildProfile.save();
       }
 
-      const textChannel = guild.channels.cache.find(channel => channel.type === 'GUILD_TEXT' && channel.permissionsFor(guild.me).has('SEND');
+      const textChannel = guild.channels.cache.find(
+        (channel) => channel.type === 'GUILD_TEXT' && channel.permissionsFor(guild.me).has('SEND_MESSAGES')
+      );
 
       if (textChannel) {
         textChannel.send('Thanks for adding me to your server!');
-}
+      }
 
       // You can perform additional actions here if needed
     } catch (error) {

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { SlashCommandBuilder } = require('discord.js');
 const { OWNER_ID, DEVLOGS_CHANNEL_ID } = process.env;
 
@@ -36,7 +37,7 @@ module.exports = {
         description: log,
         timestamp: new Date(),
         footer: {
-          text: `© SynzDev ${new Date().getFullYear()} | Timestamp:`,
+          text: `Mira Bot © SynzDev ${new Date().getFullYear()} | Timestamp:`,
         },
       };
 

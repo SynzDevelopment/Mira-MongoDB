@@ -6,7 +6,7 @@ async function statusChanging(client) {
     await client.guilds.fetch(); // Fetch the latest guild information
 
     const guildCount = client.guilds.cache.size;
-    const presenceString = `In ${guildCount} Guilds!`;
+    const presenceString = `${guildCount} Guilds!`;
 
     // Set the new presence
     await client.user.setPresence({

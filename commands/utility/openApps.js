@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageActionRow } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -8,15 +8,13 @@ module.exports = {
   async execute(interaction) {
     try {
       // Create a button with a label and style
-      const button = {
-        type: 1,
-        style: 2, // Primary button style
-        label: 'Click to apply now!',
-        custom_id: 'button_click', // Unique identifier for the button
-      };
+      const button = new ButtonBuilder()
+        .setCustomId('button_click')
+        .setLabel('Click to apply now!')
+        .setStyle(ButtonStyle.PRIMARY); // Change to your desired style
 
       // Create an action row with the button
-      const row = new MessageActionRow().addComponents(button);
+      const row = new ActionRowBuilder().addComponent(button);
 
       // Create an embed with a title and refined description
       const embed = {

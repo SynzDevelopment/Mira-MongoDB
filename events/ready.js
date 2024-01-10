@@ -1,18 +1,16 @@
 const { ActivityType } = require('discord.js');
 
 // Function to update presence with member count
-function statusChanging(client) {
-  let membersAmount = 0;
-
-  client.guilds.cache.forEach((guild) => {
+async function statusChanging(client) {
+  let membersAmount = client.guilds.cache.reduce((acc, guild) => {
     const nonBotMembers = guild.members.cache.filter((m) => !m.user.bot).size;
-    membersAmount += nonBotMembers;
-  });
+    return acc + nonBotMembers;
+  }, 0);
 
   const presenceString = `To ${membersAmount} Users in ${client.guilds.cache.size} Guilds!`;
 
   // Set the new presence
-  client.user.setPresence({
+  await client.user.setPresence({
     activities: [{ name: presenceString, type: ActivityType.Listening }],
     status: 'online',
   });

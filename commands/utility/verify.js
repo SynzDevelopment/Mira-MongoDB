@@ -36,7 +36,8 @@ module.exports = {
           await user.roles.add(verifiedRole);
 
           // Remove user data using Mongoose method
-          await verifyProfile.remove();
+          const removeProfle = await verifyData.findOneAndDelete({ id: interaction.user.id });
+          removeProfile();
 
           return interaction.editReply({
             content: "Verification successful! [Link](https://discord.com/channels/1193401538052358214/1193401538522140787)",

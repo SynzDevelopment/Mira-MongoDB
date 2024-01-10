@@ -36,7 +36,7 @@ module.exports = {
           await user.roles.add(verifiedRole);
 
           // Remove user data using Mongoose method
-          const removeProfle = await verifyData.findOneAndDelete({ id: interaction.user.id });
+          const removeProfile = await verifyData.findOneAndDelete({ id: interaction.user.id });
           removeProfile();
 
           return interaction.editReply({

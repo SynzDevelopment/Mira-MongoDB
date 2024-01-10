@@ -15,7 +15,7 @@ module.exports = {
       };
 
       // Send the embed and add a reaction
-      const message = await interaction.reply({
+      const message = await interaction.send({
         embeds: [embed],
       });
 

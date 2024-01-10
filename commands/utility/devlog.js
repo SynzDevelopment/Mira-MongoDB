@@ -1,6 +1,5 @@
-require('dotenv').config();
 const { SlashCommandBuilder } = require('discord.js');
-const { OWNER_ID, DEVLOGS_CHANNEL_ID } = process.env;
+const { OWNER_ID } = process.env;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -33,24 +32,34 @@ module.exports = {
       // Create an embed with classic Discord color
       const embed = {
         color: 0x5865F2, // Discord's classic color
-        title: title,
+        title,
         description: log,
         timestamp: new Date(),
         footer: {
-          text: `Mira Bot © SynzDev ${new Date().getFullYear()} | Timestamp:`,
+          text: `Mira Bot Â© Synz ${new Date().getFullYear()} | Timestamp:`,
         },
       };
 
-      // Get the DEVLOGS channel
-      const devlogsChannel = interaction.guild.channels.cache.get(DEVLOGS_CHANNEL_ID);
+      // Get the specified channel by ID
+      const targetChannelId = '1193404504461295626'; // Replace with your target channel ID
+      const targetChannel = interaction.guild.channels.cache.get(targetChannelId);
 
-      if (!devlogsChannel || devlogsChannel.type !== 'text') {
-        console.error(`DEVLOGS_CHANNEL_ID (${DEVLOGS_CHANNEL_ID}) not found or not a text channel.`);
+      if (!targetChannel || targetChannel.type !== 'text') {
+        console.error(`Target channel (${targetChannelId}) not found or not a text channel.`);
         return interaction.reply({ content: 'Development log channel not found or invalid.', ephemeral: true });
       }
 
-      // Send the embed to the DEVLOGS channel
-      await devlogsChannel.send({ embeds: [embed] });
+      // Get the specified role by ID
+      const targetRoleId = '1194550697027436574'; // Replace with your target role ID
+      const targetRole = interaction.guild.roles.cache.get(targetRoleId);
+
+      if (!targetRole) {
+        console.error(`Target role (${targetRoleId}) not found.`);
+        return interaction.reply({ content: 'Target role not found or invalid.', ephemeral: true });
+      }
+
+      // Send the embed to the specified channel with the role mention
+      await targetChannel.send({ content: targetRole.toString(), embeds: [embed] });
 
       return interaction.reply({ content: 'Development log added successfully.', ephemeral: true });
     } catch (error) {

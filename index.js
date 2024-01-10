@@ -14,7 +14,7 @@ const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
 // Initialize the MongoDB connection
-const clientMongo = new MongoClient(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+const clientMongo = new MongoClient(MONGODB_URI, { useUnifiedTopology: true });
 
 clientMongo.connect()
   .then(() => {

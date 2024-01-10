@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const UserData = require('../schemas/userSchema');
+const UserData = require('../schemas/userSchema.js');
 
 module.exports = {
   data: new SlashCommandBuilder()

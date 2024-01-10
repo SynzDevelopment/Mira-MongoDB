@@ -5,8 +5,8 @@ function statusChanging(client) {
   let membersAmount = 0;
 
   client.guilds.cache.forEach((guild) => {
-    const nonBotMembers = guild.members.cache.filter((m) => !m.user.bot);
-    membersAmount += nonBotMembers.size;
+    const nonBotMembers = guild.members.cache.filter((m) => !m.user.bot).size;
+    membersAmount += nonBotMembers;
   });
 
   const presenceString = `To ${membersAmount} Users in ${client.guilds.cache.size} Guilds!`;

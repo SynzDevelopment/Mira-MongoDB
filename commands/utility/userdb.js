@@ -18,6 +18,8 @@ module.exports = {
 
       await userProfile.save();
       interaction.reply(`User: ${userProfile.name}\nID: ${userProfile.id}`);
-    }
+    } else {
+      interaction.reply(`User: ${userProfile.name}\nID: ${userProfile.id}`);
+      }
   },
 };

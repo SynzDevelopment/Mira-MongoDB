@@ -32,7 +32,7 @@ module.exports = {
       const guild = message.guild;
       const channel = message.channel;
       try {
-         user.send(`Your message in ${guild.name} was removed because it didn't comply with the channels rules!\n \`\`\` Message: ${message.content}\n Reason: Message did NOT contain "dm"\`\`\``)
+         user.send(`Your message in **${guild.name}** was removed because it didn't comply with the channels rules!\n \`\`\` Message: ${message.content}\n Reason: Message did NOT contain "dm"\`\`\``)
       } catch (error) {
          console.error(`Failed to send DM: ${error}`)
       }

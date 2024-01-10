@@ -54,7 +54,7 @@ module.exports = {
           await removeVerifyProfile(interaction);
 
           return interaction.editReply({
-            content: "Verification successful! [Link](https://discord.com/channels/1193401538052358214/1193401538522140787)",
+            content: "Verification successful! https://discord.com/channels/1193401538052358214/1193401538522140787",
             ephemeral: true,
           });
         } else {

@@ -23,8 +23,21 @@ module.exports = {
         console.log('Guild profile saved.');
       }
 
-      const textChannels = await guild.channels.fetch().then(channels => channels.filter(channel => channel.type === 'GUILD_TEXT'));
-      const textChannel = textChannels.find(channel => channel.permissionsFor(guild.me).has('SEND_MESSAGES' || 'ADMINISTRATOR'));
+      const allChannels = await guild.channels.fetch();
+      
+      console.log('All channels and IDs:');
+      allChannels.forEach(channel => {
+        console.log(`${channel.name} (${channel.id}) - Type: ${channel.type}`);
+      });
+
+      const textChannels = allChannels.filter(channel => channel.type === 'GUILD_TEXT');
+
+      console.log('Text channels and IDs:');
+      textChannels.forEach(textChannel => {
+        console.log(`${textChannel.name} (${textChannel.id})`);
+      });
+
+      const textChannel = textChannels.find(channel => channel.permissionsFor(guild.me).has('SEND_MESSAGES'));
 
       if (textChannel) {
         console.log(`Sending welcome message in text channel: ${textChannel.name} (${textChannel.id})`);

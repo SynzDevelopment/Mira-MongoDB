@@ -19,9 +19,7 @@ module.exports = {
         await guildProfile.save();
       }
 
-      const textChannel = guild.channels.cache.find(
-        (channel) => channel.type === 'GUILD_TEXT' && channel.permissionsFor(guild.me).has('SEND_MESSAGES')
-      );
+      const textChannel = await guild.channels.fetch().then(channels => channels.find(channel => channel.type === 'GUILD_TEXT' && channel.permissionsFor(guild.me).has('SEND_MESSAGES')));
 
       if (textChannel) {
         await textChannel.send('Thanks for adding me to your server!');

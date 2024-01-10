@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const mongoose = require('mongoose');
 
-const userSchema = new Schema({
+const verifySchema = new Schema({
   _id: {
     type: Schema.Types.ObjectId,
     default: () => new mongoose.Types.ObjectId(),

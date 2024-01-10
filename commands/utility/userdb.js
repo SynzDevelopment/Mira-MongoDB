@@ -8,10 +8,10 @@ module.exports = {
     .setDescription('Replies with user!'),
   async execute(interaction) {
     let userProfile = await User.findOne({ id: interaction.user.id });
-    
+
     if (!userProfile) {
       userProfile = new User({
-        _id: mongoose.Types.ObjectId(),
+        // Use the default option in the userSchema for _id
         id: interaction.user.id,
         name: interaction.user.username
       });

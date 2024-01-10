@@ -7,7 +7,7 @@ const { executeQuery } = require('./database.js'); // Adjust the path accordingl
 
 const { TOKEN, PORT } = process.env;
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages] });
 
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');

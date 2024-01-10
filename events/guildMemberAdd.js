@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { Events } = require('discord.js');
 const { GUILD_ID, UNVERIFIED_ROLE_ID, VERIFY_CHANNEL_ID } = process.env;
-const { executeQuery } = require('../database.js'); // Adjust the path based on your project structure
+const { executeQuery } = require('../database.js');
 
 // Function to generate a random 6-character code
 function generateVerificationCode() {
@@ -67,9 +67,6 @@ module.exports = {
       console.error(`Error handling guild member add event: ${error}`);
     }
 
-    // Your additional code to handle the guild member add event goes here
     console.log(`New member joined ${member.guild.name}: ${member.user.tag}`);
-
-    // You can send a welcome message or perform any other actions.
   },
 };

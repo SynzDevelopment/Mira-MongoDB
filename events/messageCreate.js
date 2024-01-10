@@ -28,7 +28,16 @@ module.exports = {
 
     // Check if the message content does not include "dm" and is not in an allowed channel
     if (!message.content.toLowerCase().includes('dm') && allowedChannelIds.includes(message.channel.id)) {
-      // If the message does not contain "dm" and is not in an allowed channel, delete the message
+      const user = message.author;
+      const guild = message.guild;
+      const channel = message.channel;
+      try {
+         user.send(`Your message in ${guild.name} was removed because it didn't comply with the channels rules!\n \`\`\` Message: ${message.content}\n Reason: Message did NOT contain "dm"\`\`\``)
+      } catch (error) {
+         console.error(`Failed to send DM: ${error}`)
+      }
+      
+      
       message.delete().catch(error => {
         console.error(`Error deleting message: ${error}`);
       });

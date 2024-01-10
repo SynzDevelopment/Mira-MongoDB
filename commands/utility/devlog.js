@@ -36,7 +36,7 @@ module.exports = {
         description: log,
         timestamp: new Date(),
         footer: {
-          text: `Mira Bot Â© Synz ${new Date().getFullYear()} | Timestamp:`,
+          text: `Mira Bot © Synz ${new Date().getFullYear()} | `,
         },
       };
 

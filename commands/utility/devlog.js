@@ -40,28 +40,10 @@ module.exports = {
         },
       };
 
-      // Get the specified channel by ID
-      const targetChannelId = '1193404504461295626'; // Replace with your target channel ID
-      const targetChannel = interaction.guild.channels.cache.get(targetChannelId);
+      // Send the embed to the channel where the command was invoked
+      await interaction.reply({ embeds: [embed] });
 
-      if (!targetChannel || targetChannel.type !== 'text') {
-        console.error(`Target channel (${targetChannelId}) not found or not a text channel.`);
-        return interaction.reply({ content: 'Development log channel not found or invalid.', ephemeral: true });
-      }
-
-      // Get the specified role by ID
-      const targetRoleId = '1194550697027436574'; // Replace with your target role ID
-      const targetRole = interaction.guild.roles.cache.get(targetRoleId);
-
-      if (!targetRole) {
-        console.error(`Target role (${targetRoleId}) not found.`);
-        return interaction.reply({ content: 'Target role not found or invalid.', ephemeral: true });
-      }
-
-      // Send the embed to the specified channel with the role mention
-      await targetChannel.send({ content: targetRole.toString(), embeds: [embed] });
-
-      return interaction.reply({ content: 'Development log added successfully.', ephemeral: true });
+      return interaction.followUp({ content: 'Development log added successfully.', ephemeral: true });
     } catch (error) {
       console.error(`Error in /devlog command: ${error}`);
       return interaction.reply({ content: 'An error occurred while processing the command.', ephemeral: true });

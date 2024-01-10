@@ -1,5 +1,3 @@
-
-
 // Array of allowed guild IDs
 const allowedGuildIds = ['1157480671929970729', '1193401538052358214'];
 
@@ -25,16 +23,18 @@ module.exports = {
     console.log(`Message received in ${message.guild.name} from ${message.author.tag} in #${message.channel.name}: "${message.content}"`);
 
     // Check if the user has an allowed role
-    const member = await message.guild.members.fetch(message.author.id);
-    const userRoles = member.roles.cache.map(role => role.id);
+    const userRoles = message.member?.roles.cache.map(role => role.id) || [];
     if (userRoles.some(roleId => allowedRoleIds.includes(roleId))) {
       // If the user has an allowed role, ignore the message
       return;
     }
 
-    // Check if the message content includes "dm"
-    if (message.content.toLowerCase().includes('dm')) {
-      return;
+    // Check if the message content does not include "dm"
+    if (!message.content.toLowerCase().includes('dm')) {
+      // If the message does not contain "dm," delete the message
+      message.delete().catch(error => {
+        console.error(`Error deleting message: ${error}`);
+      });
     }
 
     // Check if the message is from an allowed channel

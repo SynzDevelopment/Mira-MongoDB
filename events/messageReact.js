@@ -7,7 +7,7 @@ module.exports = {
     if (!reaction.message.guild) return;
 
     // Check if the reaction is added to the Bot Tester Application message
-    if (reaction.message.id === '' && reaction.emoji.name === '✅') {
+    if (reaction.message.id === '1194595549987479562' && reaction.emoji.name === '✅') {
       // Handle the reaction logic here
       console.log(`${user.tag} reacted to the Bot Tester Application message!`);
     }

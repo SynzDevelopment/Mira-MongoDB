@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
-const UserData = require("../../schemas/userSchema.js");
-const connectDB = require("../../db.js");
+const verifyData = require("../../schemas/verifySchema.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,75 +14,50 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply({ ephemeral: true });
 
-    const guild = interaction.guild;
-    const providedCode = interaction.options.getString("code");
-
-    // Call connectDB before using the model
-    connectDB();
-
-    const user = await guild.members.fetch(interaction.user.id);
-
     try {
-      // Find user data in MongoDB using Mongoose
-      const userData = await UserData.findOne({ user_id: user.id });
+      const guild = interaction.guild;
+      const providedCode = interaction.options.getString("code");
+      const user = await guild.members.fetch(interaction.user.id);
 
-      if (!userData) {
-        // User data not found
-        await interaction.editReply({
-          content: "Verification failed. User data not found.",
-          ephemeral: true,
-        });
-        return;
+      const verifyProfile = await verifyData.findOne({ id: interaction.user.id });
+
+      if (!verifyProfile) {
+        return interaction.editReply("You are unable to run this command!");
       }
 
-      const storedCode = userData.verification_code;
+      const storedCode = verifyProfile.code;
 
       if (providedCode === storedCode) {
-        const unverifiedRole = guild.roles.cache.get(
-          process.env.UNVERIFIED_ROLE_ID,
-        );
-        const verifiedRole = guild.roles.cache.get(
-          process.env.VERIFIED_ROLE_ID,
-        );
+        const unverifiedRole = guild.roles.cache.get(process.env.UNVERIFIED_ROLE_ID);
+        const verifiedRole = guild.roles.cache.get(process.env.VERIFIED_ROLE_ID);
 
         if (unverifiedRole && verifiedRole) {
-          try {
-            await user.roles.remove(unverifiedRole);
-            await user.roles.add(verifiedRole);
+          await user.roles.remove(unverifiedRole);
+          await user.roles.add(verifiedRole);
 
-            // Remove user data using Mongoose method
-            await userData.remove();
+          // Remove user data using Mongoose method
+          await verifyProfile.remove();
 
-            await interaction.editReply({
-              content:
-                "Verification successful! https://discord.com/channels/1193401538052358214/1193401538522140787",
-              ephemeral: true,
-            });
-          } catch (error) {
-            console.error(
-              `Error updating roles or deleting user data: ${error}`,
-            );
-            await interaction.editReply({
-              content: "Verification failed due to role or data update issue.",
-              ephemeral: true,
-            });
-          }
+          return interaction.editReply({
+            content: "Verification successful! [Link](https://discord.com/channels/1193401538052358214/1193401538522140787)",
+            ephemeral: true,
+          });
         } else {
           console.error("UNVERIFIED_ROLE_ID or VERIFIED_ROLE_ID not found.");
-          await interaction.editReply({
+          return interaction.editReply({
             content: "Verification failed due to role configuration issue.",
             ephemeral: true,
           });
         }
       } else {
-        await interaction.editReply({
+        return interaction.editReply({
           content: "Verification failed. Please double-check the code.",
           ephemeral: true,
         });
       }
     } catch (error) {
       console.error(`Error during verification: ${error}`);
-      await interaction.editReply({
+      return interaction.editReply({
         content: "Verification failed. Internal error.",
         ephemeral: true,
       });

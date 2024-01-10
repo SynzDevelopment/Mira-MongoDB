@@ -6,7 +6,7 @@ const { connect } = require('mongoose');
 
 const { TOKEN, PORT, MONGODB_URI } = process.env;
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageReactions] });;
 
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');

@@ -9,7 +9,7 @@ module.exports = {
     try {
       // Create a button with a label and style
       const button = new ButtonBuilder()
-        .setCustomId('button_click')
+        .setCustomId('button_click') // Ensure this is a string
         .setLabel('Click to apply now!')
         .setStyle(ButtonStyle.PRIMARY); // Change to your desired style
 

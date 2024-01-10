@@ -19,9 +19,6 @@ module.exports = {
       return;
     }
 
-    // Log information about the received message
-    console.log(`Message received in ${message.guild.name} from ${message.author.tag} in #${message.channel.name}: "${message.content}"`);
-
     // Check if the user has an allowed role
     const userRoles = message.member?.roles.cache.map(role => role.id) || [];
     if (userRoles.some(roleId => allowedRoleIds.includes(roleId))) {
@@ -29,17 +26,9 @@ module.exports = {
       return;
     }
 
-    // Check if the message content does not include "dm"
-    if (!message.content.toLowerCase().includes('dm')) {
-      // If the message does not contain "dm," delete the message
-      message.delete().catch(error => {
-        console.error(`Error deleting message: ${error}`);
-      });
-    }
-
-    // Check if the message is from an allowed channel
-    if (!allowedChannelIds.includes(message.channel.id)) {
-      // If not from an allowed channel and without an allowed role, delete the message
+    // Check if the message content does not include "dm" and is not in an allowed channel
+    if (!message.content.toLowerCase().includes('dm') && !allowedChannelIds.includes(message.channel.id)) {
+      // If the message does not contain "dm" and is not in an allowed channel, delete the message
       message.delete().catch(error => {
         console.error(`Error deleting message: ${error}`);
       });

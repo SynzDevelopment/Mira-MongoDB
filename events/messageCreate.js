@@ -1,3 +1,5 @@
+const { Message } = require('discord.js');
+
 // Array of allowed guild IDs
 const allowedGuildIds = ['1157480671929970729'];
 
@@ -11,6 +13,16 @@ module.exports = {
   name: 'messageCreate',
   once: false,
   async execute(message) {
+    // Fetch partial messages if necessary
+    if (message.partial) {
+      try {
+        await message.fetch();
+      } catch (error) {
+        console.error('[ERROR] Error fetching partial message:', error);
+        return;
+      }
+    }
+
     // Ignore messages from bots or messages not in guilds to avoid issues
     if (message.author.bot || !message.guild) return;
 
@@ -32,15 +44,17 @@ module.exports = {
       const guild = message.guild;
       const channel = message.channel;
       try {
-         user.send(`Your message in **${guild.name}** was removed because it didn't comply with the channels rules!\n \`\`\` Message: ${message.content}\n Reason: Message did NOT contain "dm"\`\`\``)
+        await user.send(`Your message in **${guild.name}** was removed because it didn't comply with the channel's rules!\n \`\`\` Message: ${message.content}\n Reason: Message did NOT contain "dm"\`\`\``);
       } catch (error) {
-         console.error(`Failed to send DM: ${error}`)
+        console.error(`Failed to send DM: ${error}`);
       }
-      
-      
-      message.delete().catch(error => {
+
+      // Delete the message
+      try {
+        await message.delete();
+      } catch (error) {
         console.error(`Error deleting message: ${error}`);
-      });
+      }
     }
 
     // Add your own message processing logic here if needed

@@ -9,6 +9,7 @@ module.exports = {
       let guildProfile = await guildData.findOne({
         id: guild.id
       });
+
       if (!guildProfile) {
         guildProfile = new guildData({
           id: guild.id,
@@ -23,7 +24,9 @@ module.exports = {
       );
 
       if (textChannel) {
-        textChannel.send('Thanks for adding me to your server!');
+        await textChannel.send('Thanks for adding me to your server!');
+      } else {
+        console.error('Bot does not have permission to send messages in any text channel.');
       }
 
       // You can perform additional actions here if needed

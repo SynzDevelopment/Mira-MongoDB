@@ -1,12 +1,21 @@
 require('dotenv').config();
-const fs = require('node:fs');
-const path = require('node:path');
-const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const fs = require('fs');
+const path = require('path');
+const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 const { connect } = require('mongoose');
 
-const { TOKEN, PORT, MONGODB_URI } = process.env;
+const { TOKEN, MONGODB_URI } = process.env;
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageReactions], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMessageReactions
+  ],
+  partials: [Partials.Channel, Partials.Reaction, Partials.Message]
+});
 
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
@@ -43,7 +52,7 @@ for (const file of eventFiles) {
 // Log in to Discord
 client.login(TOKEN);
 
-// Connect to MongoDB using then
+// Connect to MongoDB
 connect(MONGODB_URI)
   .then(() => {
     console.log('[INFO] Connected to MongoDB');

@@ -2,20 +2,26 @@ const { ActivityType } = require('discord.js');
 
 // Function to update presence with member count
 async function statusChanging(client) {
-  let membersAmount = client.guilds.cache.reduce((acc, guild) => {
-    const nonBotMembers = guild.members.cache.filter((m) => !m.user.bot).size;
-    return acc + nonBotMembers;
-  }, 0);
+  try {
+    await client.guilds.fetch(); // Fetch the latest guild information
 
-  const presenceString = `To ${membersAmount} Users in ${client.guilds.cache.size} Guilds!`;
+    let membersAmount = client.guilds.cache.reduce((acc, guild) => {
+      const nonBotMembers = guild.members.cache.filter((m) => !m.user.bot).size;
+      return acc + nonBotMembers;
+    }, 0);
 
-  // Set the new presence
-  await client.user.setPresence({
-    activities: [{ name: presenceString, type: ActivityType.Listening }],
-    status: 'online',
-  });
+    const presenceString = `To ${membersAmount} Users in ${client.guilds.cache.size} Guilds!`;
 
-  console.log(`Updated presence: ${presenceString}`);
+    // Set the new presence
+    await client.user.setPresence({
+      activities: [{ name: presenceString, type: ActivityType.Listening }],
+      status: 'online',
+    });
+
+    console.log(`Updated presence: ${presenceString}`);
+  } catch (error) {
+    console.error(`Error fetching guild information: ${error}`);
+  }
 }
 
 module.exports = {

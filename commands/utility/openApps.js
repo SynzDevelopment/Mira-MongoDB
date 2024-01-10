@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageActionRow } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,10 +16,7 @@ module.exports = {
       };
 
       // Create an action row with the button
-      const row = {
-        type: 1,
-        components: [button],
-      };
+      const row = new MessageActionRow().addComponents(button);
 
       // Create an embed with a title and refined description
       const embed = {

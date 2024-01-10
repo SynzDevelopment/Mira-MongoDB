@@ -5,7 +5,7 @@ const allowedGuildIds = ['1157480671929970729', '1193401538052358214'];
 const allowedChannelIds = ['1193405005143744572', '1193464204338929785'];
 
 // Array of allowed role IDs
-const allowedRoleIds = ['1193402360286957578', '1193401769682812969'];
+const allowedRoleIds = ['1193402360286957579', '1193401769682812969'];
 
 module.exports = {
   name: 'messageCreate',

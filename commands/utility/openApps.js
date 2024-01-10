@@ -20,23 +20,24 @@ module.exports = {
         components: [row],
       });
 
+      const collector = interaction.channel.createMessageComponentCollector({
+        filter: i => i.customId === 'apply',
+      });
+
+      collector.on('collect', async i => {
+        await i.reply({
+          content: 'You clicked the button!',
+          ephemeral: true,
+        });
+      });
+
+      collector.on('end', collected => {
+        console.log(`Collected ${collected.size} interactions`);
+      });
+
     } catch (error) {
       console.error(`Error in /openapps: ${error}`);
       return interaction.reply({ content: 'An error occurred while processing the command.', ephemeral: true });
-    }
-  },
-
-  async buttonClick(interaction) {
-    try {
-      if (interaction.customId === "apply") {
-        await interaction.reply({
-          content: "You clicked the button!",
-          ephemeral: true
-        });
-      }
-    } catch (error) {
-      console.error(`Error handling button click: ${error}`);
-      await interaction.followUp({ content: 'An error occurred while processing the button click.', ephemeral: true });
     }
   },
 };

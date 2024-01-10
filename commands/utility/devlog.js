@@ -29,14 +29,19 @@ module.exports = {
       const title = interaction.options.getString('title');
       const log = interaction.options.getString('log');
 
-      // Create an embed with classic Discord color
+      // Create a more stylized embed
       const embed = {
         color: 0x5865F2, // Discord's classic color
         title,
         description: log,
+        author: {
+          name: interaction.user.tag,
+          icon_url: interaction.user.displayAvatarURL(),
+        },
         timestamp: new Date(),
         footer: {
-          text: `Mira Bot © Synz ${new Date().getFullYear()} | `,
+          text: 'Mira Bot © Synz',
+          icon_url: interaction.client.user.displayAvatarURL(),
         },
       };
 

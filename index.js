@@ -43,11 +43,10 @@ for (const file of eventFiles) {
 // Log in to Discord
 client.login(TOKEN);
 
-// Connect to MongoDB
-connect(MONGODB_URI, (err) => {
-  if (err) {
-    console.error('[ERROR] Failed to connect to MongoDB:', err);
-  } else {
-    console.log('[INFO] Connected to MongoDB');
-  }
-});
+// Connect to MongoDB using await
+try {
+  await connect(MONGODB_URI);
+  console.log('[INFO] Connected to MongoDB');
+} catch (error) {
+  console.error('[ERROR] Failed to connect to MongoDB:', error);
+}

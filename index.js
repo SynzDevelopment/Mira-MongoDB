@@ -7,11 +7,20 @@ const { connect } = require('mongoose');
 const { TOKEN, MONGODB_URI } = process.env;
 
 const express = require('express');
+const express = require('express');
 const app = express();
 const port = 5028;
 
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+
+// Serve static files from the "public" directory
+app.use(express.static(__dirname + '/public'));
+
+// Define a route for the root ("/")
 app.get('/', (req, res) => {
-  res.send('Hello, this is the root route!');
+  res.render('index', { message: 'Hello, this is the root route!' });
 });
 
 app.listen(port, () => {

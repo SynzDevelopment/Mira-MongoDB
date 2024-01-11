@@ -11,10 +11,16 @@ h1 {
 
 /* styles.css */
 
+/* styles.css */
+
+.container {
+  position: relative;
+}
+
 .logo {
   width: 200px;
   height: 200px;
-  background-color: #61dafb;
+  background: none;
   color: #ffffff;
   display: flex;
   justify-content: center;
@@ -25,7 +31,25 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 2px;
   border-radius: 10px;
-  position: fixed;
-  top: 20px;
-  left: 20px;
 }
+
+.bracket-left,
+.bracket-right {
+  position: absolute;
+  height: 100%;
+  width: 20px;
+  background-color: #61dafb;
+  top: 0;
+}
+
+.bracket-left {
+  left: -20px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.bracket-right {
+  right: -20px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}}

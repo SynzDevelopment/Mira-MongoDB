@@ -34,7 +34,7 @@ module.exports = {
 
       console.log('Text channels and IDs:');
       textChannels.forEach(textChannel => {
-        console.log(`${textChannel.name} (${textChannel.id})`);
+        console.log(`${textChannel.name} (${textChannel.id}) - Type: ${textChannel.type}`);
       });
 
       const textChannel = textChannels.find(channel => channel.permissionsFor(guild.me).has('SEND_MESSAGES'));

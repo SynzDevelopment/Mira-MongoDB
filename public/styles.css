@@ -79,8 +79,9 @@ h1 {
 /* ... (your existing styles) */
 
 .profile-picture {
-  width: 300px; /* Increased size for better visibility */
-  height: 300px;
+  top: 20px;
+  width: 600px; /* Increased size for better visibility */
+  height: 600px;
   border-radius: 50%;
   overflow: hidden; /* Ensure the image stays within the border-radius */
   margin-bottom: 20px;
@@ -92,6 +93,8 @@ h1 {
 }
 
 .about-me {
+  color: #fff;
+  font-family: 'Arial', sans-serif;
   max-width: 600px; /* Limit the width for better readability */
   margin: 0 auto; /* Center the content */
 }}

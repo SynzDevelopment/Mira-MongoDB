@@ -23,28 +23,14 @@ module.exports = {
         console.log('Guild profile saved.');
       }
 
-      const allChannels = await guild.channels.fetch();
-      
-      console.log('All channels and IDs:');
-      allChannels.forEach(channel => {
-        console.log(`${channel.name} (${channel.id}) - Type: ${channel.type}`);
-      });
-
-      const textChannels = allChannels.filter(channel => channel.type === 'GUILD_TEXT');
-
-      console.log('Text channels and IDs:');
-      textChannels.forEach(textChannel => {
-        console.log(`${textChannel.name} (${textChannel.id}) - Type: ${textChannel.type}`);
-      });
-
-      const textChannel = textChannels.find(channel => channel.permissionsFor(guild.me).has('SEND_MESSAGES'));
+      const textChannel = guild.channels.cache.find(channel => channel.type === 0);
 
       if (textChannel) {
         console.log(`Sending welcome message in text channel: ${textChannel.name} (${textChannel.id})`);
         await textChannel.send('Thanks for adding me to your server!');
         console.log('Welcome message sent successfully.');
       } else {
-        console.error('Bot does not have permission to send messages in any text channel.');
+        console.error('No text channels found in the guild.');
       }
 
       // You can perform additional actions here if needed

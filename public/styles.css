@@ -13,7 +13,7 @@ h1 {
 
 .logo {
   font-family: 'Arial', sans-serif;
-  font-size: 50px; /* Increase the font size */
+  font-size: 60px; /* Increase the font size */
   font-weight: bold;
   color: #ffffff; /* Text color */
   background-color: transparent; /* Transparent background */
@@ -22,10 +22,46 @@ h1 {
   margin: 20px;
 }
 
-.logo::before,
+.logo::before {
+
+  content: '{';
+  font-size: 65px;
+
+  color: #61dafb; /* Color for the brackets */
+
+  position: relative;
+
+  z-index: 1; /* Set a higher z-index to ensure visibility */
+
+}
 .logo::after {
-  content: '{ }';
+  content: '}';
+  font-size: 65px;
   color: #61dafb; /* Color for the brackets */
   position: relative;
   z-index: 1; /* Set a higher z-index to ensure visibility */
+}
+
+.navigation {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
+}
+
+.navigation a {
+  color: #ffffff;
+  margin-left: 15px;
+  text-decoration: none;
+  background-color: transparent;
+  padding: 5px; /* Add padding for better spacing */
+  border-radius: 3px;
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.navigation a:hover {
+  background-color: rgba(97, 218, 251, 0.3); /* Light blue background on hover */
+}
+.navigation a.active {
+  text-decoration: underline; /* Underline for the active link */
 }

@@ -22,6 +22,14 @@ app.get('/', (req, res) => {
   res.render('index', { message: 'Hello, this is the root route!' });
 });
 
+app.get('/projects', (req, res) => {
+  res.render('projects', { message: 'Hello, this is the root route!' });
+});
+
+app.get('/mira', (req, res) => {
+  res.render('mira', { message: 'Hello, this is the root route!' });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

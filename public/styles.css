@@ -9,3 +9,23 @@ h1 {
   color: #61dafb;
 }
 
+/* styles.css */
+
+.logo {
+  width: 200px;
+  height: 200px;
+  background-color: #61dafb;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Arial', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-radius: 10px;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+}

@@ -11,12 +11,6 @@ h1 {
 
 /* styles.css */
 
-/* styles.css */
-
-/* styles.css */
-
-/* styles.css */
-
 .logo {
   font-family: 'Arial', sans-serif;
   font-size: 50px; /* Increase the font size */
@@ -28,11 +22,10 @@ h1 {
   margin: 20px;
 }
 
-.logo::before {
-  content: '{ ';
-  color: #61dafb; /* Color for the brackets */
-}}}}
+.logo::before,
 .logo::after {
-  content: ' }';
+  content: '{ }';
   color: #61dafb; /* Color for the brackets */
-}}}}
+  position: relative;
+  z-index: 1; /* Set a higher z-index to ensure visibility */
+}

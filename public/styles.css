@@ -28,8 +28,11 @@ h1 {
   margin: 20px;
 }
 
-.logo::before,
+.logo::before {
+  content: '{ ';
+  color: #61dafb; /* Color for the brackets */
+}}}}
 .logo::after {
-  content: '{ Synz }';
+  content: ' }';
   color: #61dafb; /* Color for the brackets */
 }}}}

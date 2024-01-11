@@ -13,43 +13,28 @@ h1 {
 
 /* styles.css */
 
-.container {
-  position: relative;
-}
+/* styles.css */
 
 .logo {
-  width: 200px;
-  height: 200px;
-  background: none;
-  color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-family: 'Arial', sans-serif;
-  font-size: 24px;
+  font-size: 30px; /* Increase the font size */
   font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-radius: 10px;
+  color: #ffffff; /* Text color */
+  background-color: transparent; /* Transparent background */
+  padding: 10px;
+  border-radius: 5px;
+  margin: 20px;
 }
 
-.bracket-left,
-.bracket-right {
-  position: absolute;
-  height: 100%;
-  width: 20px;
-  background-color: #61dafb;
-  top: 0;
+.logo::before,
+.logo::after {
+  content: '{';
+  color: #61dafb; /* Color for the opening bracket */
+  margin-right: 5px;
 }
 
-.bracket-left {
-  left: -20px;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-
-.bracket-right {
-  right: -20px;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-}}
+.logo::after {
+  content: '}';
+  color: #61dafb; /* Color for the closing bracket */
+  margin-left: 5px;
+}}}

@@ -7,7 +7,6 @@ const { connect } = require('mongoose');
 const { TOKEN, MONGODB_URI } = process.env;
 
 const express = require('express');
-const express = require('express');
 const app = express();
 const port = 5028;
 

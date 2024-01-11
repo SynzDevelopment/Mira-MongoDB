@@ -68,3 +68,20 @@ h1 {
 .navigation a.active {
   text-decoration: underline; /* Underline for the active link */
 }
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-picture {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #333; /* Add your preferred background color */
+  margin-bottom: 10px;
+}
+
+.about-me {
+  text-align: center;
+}

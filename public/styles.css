@@ -44,7 +44,7 @@ h1 {
 
 .navigation {
   position: absolute;
-  top: 0;
+  top: 20px;
   right: 0;
   margin: 20px;
 }
@@ -79,8 +79,8 @@ h1 {
 /* ... (your existing styles) */
 
 .profile-picture {
-  width: 150px; /* Increased size for better visibility */
-  height: 150px;
+  width: 300px; /* Increased size for better visibility */
+  height: 300px;
   border-radius: 50%;
   overflow: hidden; /* Ensure the image stays within the border-radius */
   margin-bottom: 20px;

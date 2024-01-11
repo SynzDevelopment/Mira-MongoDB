@@ -55,8 +55,9 @@ h1 {
   text-decoration: none;
   font-family: 'Arial', sans-serif;
   font-size: 45px;
+  font-weight: bold;
   background-color: transparent;
-  padding: 5px; /* Add padding for better spacing */
+  padding: 10px; /* Add padding for better spacing */
   border-radius: 3px;
   transition: background-color 0.3s ease; /* Smooth transition on hover */
 }

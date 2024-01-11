@@ -15,9 +15,11 @@ h1 {
 
 /* styles.css */
 
+/* styles.css */
+
 .logo {
   font-family: 'Arial', sans-serif;
-  font-size: 30px; /* Increase the font size */
+  font-size: 50px; /* Increase the font size */
   font-weight: bold;
   color: #ffffff; /* Text color */
   background-color: transparent; /* Transparent background */
@@ -28,13 +30,6 @@ h1 {
 
 .logo::before,
 .logo::after {
-  content: '{';
-  color: #61dafb; /* Color for the opening bracket */
-  margin-right: 5px;
-}
-
-.logo::after {
-  content: '}';
-  color: #61dafb; /* Color for the closing bracket */
-  margin-left: 5px;
-}}}
+  content: '{ Synz }';
+  color: #61dafb; /* Color for the brackets */
+}}}}

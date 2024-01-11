@@ -1,4 +1,7 @@
 /* styles.css */
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+</style>
 
 body {
   background-color: #222222;
@@ -12,7 +15,7 @@ h1 {
 /* styles.css */
 
 .logo {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 60px; /* Increase the font size */
   font-weight: bold;
   color: #ffffff; /* Text color */
@@ -53,7 +56,7 @@ h1 {
   color: #ffffff;
   margin-left: 15px;
   text-decoration: none;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 45px;
   font-weight: bold;
   background-color: transparent;

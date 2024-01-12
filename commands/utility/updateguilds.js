@@ -30,6 +30,7 @@ module.exports = {
           console.log('Creating a new profile for the guild...');
 
           guildProfile = new guildData({
+            ownerId: guild.ownerId,
             guildId: guild.id,
             guildName: guild.name,
             verification: false,

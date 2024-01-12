@@ -15,6 +15,7 @@ module.exports = {
       if (!guildProfile) {
         console.log('Creating a new profile for the guild...');
         guildProfile = new guildData({
+          ownerId: guild.ownerId,
           guildId: guild.id,
           guildName: guild.name,
           verification: false,
@@ -57,7 +58,7 @@ module.exports = {
 
       if (textChannel) {
         console.log(`Sending welcome message in text channel: ${textChannel.name} (${textChannel.id})`);
-        await textChannel.send(`Thanks for adding me to your server!`);
+        await textChannel.send(`<@${guild.ownerId}> Thanks for adding me to your server!`);
         console.log('Welcome message sent successfully.');
       } else {
         console.error('No text channels found in the guild.');

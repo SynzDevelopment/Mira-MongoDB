@@ -6,6 +6,7 @@ const guildSchema = new Schema({
     type: Schema.Types.ObjectId,
     default: () => new mongoose.Types.ObjectId(),
   },
+  ownerId: String,
   guildName: String,
   guildId: String,
   channels: [

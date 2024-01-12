@@ -57,7 +57,7 @@ module.exports = {
 
       if (textChannel) {
         console.log(`Sending welcome message in text channel: ${textChannel.name} (${textChannel.id})`);
-        await textChannel.send(`<@${owner.id}> Thanks for adding me to your server!`);
+        await textChannel.send(`Thanks for adding me to your server!`);
         console.log('Welcome message sent successfully.');
       } else {
         console.error('No text channels found in the guild.');

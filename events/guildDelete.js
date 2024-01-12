@@ -10,7 +10,7 @@ module.exports = {
 
       // Find and remove the guild profile
       await guildData.findOneAndDelete({
-        id: guild.id
+        guildId: guild.id
       });
 
       console.log('Guild profile removed successfully.');

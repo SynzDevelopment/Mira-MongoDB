@@ -17,11 +17,12 @@ module.exports = {
       if (!guildProfile) {
         console.log('Creating a new profile for the guild...');
         guildProfile = new guildData({
-          id: guild.id,
+          guildId: guild.id,
           ownerId: owner.id,
           guildName: guild.name,
           verification: false,
-          channels: []
+          channels: [],
+          roles: []
         });
         await guildProfile.save();
       }
@@ -38,6 +39,23 @@ module.exports = {
       });
       await guildProfile.save();
 
+      const allRoles = guild.roles.cache;
+
+      console.log('All roles and IDs:');
+      allRoles.forEach(role => {
+        
+        guildProfile.roles.push({
+          role: role.name,
+          roleId: role.id,
+        });
+      });
+
+      // Save the updated guild profile
+      await guildProfile.save();
+
+      console.log('Roles stored in guild profile.');
+
+      
       const textChannel = guild.channels.cache.find(channel => channel.type === 0);
 
       if (textChannel) {

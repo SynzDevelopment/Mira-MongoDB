@@ -6,8 +6,21 @@ const guildSchema = new Schema({
     type: Schema.Types.ObjectId,
     default: () => new mongoose.Types.ObjectId(),
   },
-  name: String,
-  id: String,
+  guildName: String,
+  guildId: String,
+  ownerId: String,
+  channels: [
+    {
+      channel: String,
+      channelId: String,
+    }
+  ],
+  roles: [
+    {
+      role: String,
+      roleId: String,
+    }
+  ],
   verification: {
     type: Boolean,
     default: false,

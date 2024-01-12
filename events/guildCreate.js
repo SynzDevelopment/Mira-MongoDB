@@ -8,6 +8,8 @@ module.exports = {
     try {
       console.log(`Bot joined guild: ${guild.name} (${guild.id})`);
 
+      let owner = guild.owner;
+
       let guildProfile = await guildData.findOne({
         id: guild.id
       });
@@ -16,18 +18,31 @@ module.exports = {
         console.log('Creating a new profile for the guild...');
         guildProfile = new guildData({
           id: guild.id,
-          name: guild.name,
-          verification: false
+          ownerId: owner.id,
+          guildName: guild.name,
+          verification: false,
+          channels: []
         });
         await guildProfile.save();
-        console.log('Guild profile saved.');
       }
+
+      const allChannels = await guild.channels.fetch();
+
+      allChannels.forEach(channel => {
+        if (channel.type === 0) {
+          guildProfile.channels.push({
+            channel: channel.name,
+            channelId: channel.id,
+          });
+        }
+      });
+      await guildProfile.save();
 
       const textChannel = guild.channels.cache.find(channel => channel.type === 0);
 
       if (textChannel) {
         console.log(`Sending welcome message in text channel: ${textChannel.name} (${textChannel.id})`);
-        await textChannel.send('Thanks for adding me to your server!');
+        await textChannel.send(`<@${owner.id}> Thanks for adding me to your server!`);
         console.log('Welcome message sent successfully.');
       } else {
         console.error('No text channels found in the guild.');

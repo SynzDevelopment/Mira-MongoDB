@@ -6,8 +6,8 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     default: () => new mongoose.Types.ObjectId(),
   },
-  name: String,
-  id: String
+  username: String,
+  userId: String
 });
 
 module.exports = model('User', userSchema);

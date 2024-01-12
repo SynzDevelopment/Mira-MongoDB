@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const guildData = require('../schemas/guildSchema.js');
+const guildData = require('../../schemas/guildSchema.js');
 require('dotenv').config(); // Load environment variables from .env
 
 module.exports = {

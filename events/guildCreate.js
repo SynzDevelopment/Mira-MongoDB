@@ -11,7 +11,7 @@ module.exports = {
       let owner = guild.owner;
 
       let guildProfile = await guildData.findOne({
-        id: guild.id
+        guildId: guild.id
       });
 
       if (!guildProfile) {

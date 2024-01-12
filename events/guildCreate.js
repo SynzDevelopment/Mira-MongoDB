@@ -8,8 +8,6 @@ module.exports = {
     try {
       console.log(`Bot joined guild: ${guild.name} (${guild.id})`);
 
-      let owner = guild.owner;
-
       let guildProfile = await guildData.findOne({
         guildId: guild.id
       });
@@ -18,7 +16,6 @@ module.exports = {
         console.log('Creating a new profile for the guild...');
         guildProfile = new guildData({
           guildId: guild.id,
-          ownerId: owner.id,
           guildName: guild.name,
           verification: false,
           channels: [],

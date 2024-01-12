@@ -28,11 +28,9 @@ module.exports = {
         if (!guildProfile) {
           // Guild profile doesn't exist, create a new one
           console.log('Creating a new profile for the guild...');
-          const owner = guild.owner;
 
           guildProfile = new guildData({
             guildId: guild.id,
-            ownerId: owner.id,
             guildName: guild.name,
             verification: false,
             channels: [],

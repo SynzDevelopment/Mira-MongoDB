@@ -8,7 +8,6 @@ const guildSchema = new Schema({
   },
   guildName: String,
   guildId: String,
-  ownerId: String,
   channels: [
     {
       channel: String,

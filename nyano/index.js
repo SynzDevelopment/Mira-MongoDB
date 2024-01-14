@@ -13,28 +13,28 @@ const client = new Client({
 console.log('Starting Nyano bot...');
 
 const similarResponses = [
-  'Rad!',
-  'Neat!',
+  'Yay!',
+  'Wowza!',
+  'Super duper!',
+  'Amazing!',
+  'Wowie!',
   'Fantastic!',
-  'Outstanding!',
-  'Tremendous!',
-  'Marvelous!',
   'Impressive!',
-  'Splendid!',
-  'Superb!',
-  'Wonderful!',
-  'Terrific!',
-  'Stellar!',
-  'Dope!',
-  'Great job!',
-  'Remarkable!',
-  'Excellent!',
-  'Wicked!',
-  'Bravo!',
-  'Awe-inspiring!',
-  'Top-notch!',
-  'Awesome!',
-  'Cool!',
+  'Sparkly!',
+  'Awesome sauce!',
+  'Wonderific!',
+  'Totally tubular!',
+  'Stellarific!',
+  'Super cool!',
+  'Great jobaroo!',
+  'Remarkabobble!',
+  'Excellent-o!',
+  'Wickedly awesome!',
+  'Bravissimo!',
+  'Awe-tastic!',
+  'Top-notcharoo!',
+  'Totally awesome!',
+  'Cool beans!',
 ];
 
 let messageCount = 0;
@@ -48,7 +48,7 @@ client.on('messageCreate', (message) => {
 
   messageCount++;
 
-  if (messageCount % 5 === 0) {
+  if (messageCount % 4 === 0) {
     const randomIndex = Math.floor(Math.random() * similarResponses.length);
     const randomResponse = similarResponses[randomIndex];
     message.reply(randomResponse);

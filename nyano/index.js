@@ -42,7 +42,7 @@ const similarResponses = [
 client.on('messageCreate', (message) => {
   if (message.author.bot) return; // Ignore messages from other bots
 
-  const messageCount = 0;
+  let messageCount = 0;
   messageCount++;
 
   if (messageCount % 5 === 0) {

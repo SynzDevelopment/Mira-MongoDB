@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { Client, GatewayIntentBits } = require('discord.js');
-const token = process.env.nyano; // Make sure to create a 'config.json' file with your bot token
+const token = process.env.nyano;
 
 const client = new Client({
   intents: [
@@ -10,9 +10,7 @@ const client = new Client({
   ],
 });
 
-client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}`);
-});
+console.log('Starting Nyano bot...');
 
 const similarResponses = [
   'Rad!',
@@ -39,10 +37,15 @@ const similarResponses = [
   'Cool!',
 ];
 
+let messageCount = 0;
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}`);
+});
+
 client.on('messageCreate', (message) => {
   if (message.author.bot) return; // Ignore messages from other bots
 
-  let messageCount = 0;
   messageCount++;
 
   if (messageCount % 5 === 0) {

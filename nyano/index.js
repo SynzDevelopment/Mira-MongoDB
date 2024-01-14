@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { Client, GatewayIntentBits } = require('discord.js');
-const { openaiApiKey } = process.env; // Make sure to set up an OpenAI GPT-3 API key
+const openaiApiKey  = process.env.openaiApiKey; // Make sure to set up an OpenAI GPT-3 API key
 
 const OpenAI = require('openai');
 const openai = new OpenAI(openaiApiKey);

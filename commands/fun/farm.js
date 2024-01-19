@@ -6,17 +6,16 @@ module.exports = {
 		.setDescription('Start the game!'),
 	async execute(interaction) {
 		const farmBtn = new ButtonBuilder()
-		.setCustomId('farm')
-		.setLabel('Farm')
-		.setStyle(ButtonStyle.Primary);
+			.setCustomId('farm')
+			.setLabel('Farm')
+			.setStyle(ButtonStyle.Primary);
 
 		const row = new ActionRowBuilder()
-		.addComponents(farmBtn);
+			.addComponents(farmBtn);
 
-		await interaction.reply{
+		await interaction.reply({
 			content: 'Farm',
 			components: [row]
-		}
-
+		});
 	},
 };

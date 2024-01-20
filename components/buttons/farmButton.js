@@ -13,7 +13,7 @@ async function handleFarmButton(interaction) {
     await farmProfile.save();
   }
 
-  const farmEmbed = createFarmEmbed(farmProfile);
+  const farmEmbed = farmMainEmbed(farmProfile);
 
   const farmBtn = new ButtonBuilder()
     .setCustomId('farm')
